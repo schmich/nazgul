@@ -26,7 +26,7 @@
     "bluebird": "^2.9.14",
     "irc": "^0.3.9",
     "moment": "^2.9.0",
-    "mongo": "^0.1.0",
+    "mongodb": "^1.4.34",
     "request": "^2.53.0",
     "sprintf": "^0.1.5",
     "winston": "^0.9.0"
