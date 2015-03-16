@@ -2,6 +2,7 @@
 
 ## Installation
 
+- Install [MongoDB](https://www.mongodb.org/downloads)
 - Install [NodeJS 0.11.x](http://nodejs.org/dist/v0.11.16/) (or any version with Harmony support)
 - `git clone https://github.com/schmich/nazgul`
 - `npm install`
