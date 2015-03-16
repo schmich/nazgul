@@ -42,3 +42,9 @@
  - `ad`: List of admins in chat
  - `gm`: List of global moderators in chat
  - `vi`: List of ordinary viewers in chat
+
+## License
+
+Copyright &copy; 2015 Chris Schmich
+<br>
+MIT License, See [LICENSE](LICENSE) for details.
