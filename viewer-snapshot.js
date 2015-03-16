@@ -26,7 +26,7 @@ var twitchRequest = async(function(options) {
     if (statusCode != 200) {
       Log.error(sprintf('Unexpected status code: %d\nResponse: %s', statusCode, body));
       if (tries == maxTries) {
-        throw new Exception(sprintf('Max tries exceeded for %s.', options.url));
+        throw new Error(sprintf('Max tries exceeded for %s.', options.url));
       }
 
       Log.info(sprintf('Try %d of %d, waiting for 5s.', tries, maxTries));
