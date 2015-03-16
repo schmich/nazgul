@@ -3,7 +3,6 @@ var irc = require('irc');
 var async = nazgul.async,
     await = nazgul.await,
     Config = nazgul.Config,
-    mongodb = nazgul.mongodb,
     Log = nazgul.Log,
     sprintf = nazgul.sprintf,
     MongoClient = nazgul.MongoClient,
