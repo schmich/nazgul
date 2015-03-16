@@ -23,6 +23,47 @@ function sleep(duration) {
   });
 }
 
+function Twitch() {
+}
+
+Twitch.request = async(function(url) {
+  var tries = 0;
+  var maxTries = 5;
+
+  var options = {
+    'url': url,
+    'headers': {
+      'Accept': 'application/vnd.twitchtv.v3+json',
+      'Client-ID': 'nazgul (https://github.com/schmich/nazgul)'
+    }
+  };
+
+  while (true) {
+    ++tries;
+
+    Log.info(sprintf('Requesting %s.', options.url));
+
+    var response = await(request.getAsync(options));
+    var body = response[0].body;
+
+    var statusCode = response[0].statusCode;
+    if (statusCode != 200) {
+      Log.error(sprintf('Unexpected status code: %d\nResponse: %s', statusCode, body));
+      if (tries == maxTries) {
+        throw new Error(sprintf('Max tries exceeded for %s.', options.url));
+      }
+
+      Log.info(sprintf('Try %d of %d, waiting for 5s.', tries, maxTries));
+      await(sleep(5000));
+      continue;
+    }
+
+    await(sleep(1000));
+    
+    return JSON.parse(body);
+  }
+});
+
 module.exports = {
   async: async,
   await: await,
@@ -32,5 +73,6 @@ module.exports = {
   sprintf: sprintf,
   URI: URI,
   MongoClient: MongoClient,
+  Twitch: Twitch,
   sleep: sleep
 };
