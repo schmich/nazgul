@@ -6,11 +6,8 @@ var async = nazgul.async,
     mongodb = nazgul.mongodb,
     Log = nazgul.Log,
     sprintf = nazgul.sprintf,
-    URI = nazgul.URI,
     MongoClient = nazgul.MongoClient,
-    Twitch = nazgul.Twitch,
-    request = nazgul.request,
-    sleep = nazgul.sleep;
+    Twitch = nazgul.Twitch;
 
 var monitor = async(function() {
   Log.info('Chat monitoring starting.');
@@ -23,7 +20,7 @@ var monitor = async(function() {
   var twitchIds = {};
   for (var i = 0; i < Config.channels.length; ++i) {
     var channel = Config.channels[i].toLowerCase();
-    var url = URI(sprintf('https://api.twitch.tv/kraken/users/%s', channel)).toString();
+    var url = sprintf('https://api.twitch.tv/kraken/users/%s', channel);
 
     var response = await(Twitch.request(url));
     var id = response._id;
@@ -33,8 +30,6 @@ var monitor = async(function() {
     }
 
     twitchIds[channel] = id;
-
-    await(sleep(1000));
   }
 
   var bot = new irc.Client('irc.twitch.tv', Config.twitch.username, {

@@ -7,9 +7,7 @@ var async = nazgul.async,
     sprintf = nazgul.sprintf,
     URI = nazgul.URI,
     MongoClient = nazgul.MongoClient,
-    Twitch = nazgul.Twitch,
-    request = nazgul.request,
-    sleep = nazgul.sleep;
+    Twitch = nazgul.Twitch;
 
 var takeSnapshot = async(function() {
   Log.info('Viewer snapshot starting.');
@@ -37,7 +35,7 @@ var takeSnapshot = async(function() {
       var doc = {
         ts: timestamp,
         ui: stream.channel._id,
-        na: stream.channel.name,
+        ch: stream.channel.name,
         ga: stream.game,
         si: stream._id,
         vi: stream.viewers,

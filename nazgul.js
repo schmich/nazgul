@@ -26,17 +26,18 @@ function sleep(duration) {
 function Twitch() {
 }
 
-Twitch.request = async(function(url) {
+Twitch.request = async(function(url, headers) {
   var tries = 0;
   var maxTries = 5;
 
-  var options = {
-    'url': url,
-    'headers': {
+  var options = { 'url': url };
+
+  if (headers !== false) {
+    options['headers'] = {
       'Accept': 'application/vnd.twitchtv.v3+json',
       'Client-ID': 'nazgul (https://github.com/schmich/nazgul)'
-    }
-  };
+    };
+  }
 
   while (true) {
     ++tries;
