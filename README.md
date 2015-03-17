@@ -7,6 +7,12 @@
 - `git clone https://github.com/schmich/nazgul`
 - `npm install`
 
+## Components
+
+- Live stream snapshots: collects stats on all live streams at periodic intervals
+- Chat viewer snapshots: collects viewers, mods, and admins in certain channels at periodic intervals
+- Chat monitoring: collects all messages, joins, and parts for certain channels
+
 ## Schema
 
 - `stream:snapshots`
@@ -47,5 +53,4 @@
 ## License
 
 Copyright &copy; 2015 Chris Schmich
-<br>
 MIT License, See [LICENSE](LICENSE) for details.
