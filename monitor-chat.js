@@ -8,7 +8,7 @@ var async = nazgul.async,
     MongoClient = nazgul.MongoClient,
     Twitch = nazgul.Twitch;
 
-var monitor = async(function() {
+var monitor = async(function(channels) {
   Log.info('Chat monitoring starting.');
 
   var db = await(MongoClient.connectAsync(Config.mongo));
@@ -17,8 +17,8 @@ var monitor = async(function() {
   var parts = db.collection('chat:parts');
 
   var twitchIds = {};
-  for (var i = 0; i < Config.channels.length; ++i) {
-    var channel = Config.channels[i].toLowerCase();
+  for (var i = 0; i < channels.length; ++i) {
+    var channel = channels[i].toLowerCase();
     var url = sprintf('https://api.twitch.tv/kraken/users/%s', channel);
 
     var response = await(Twitch.request(url));
@@ -51,8 +51,8 @@ var monitor = async(function() {
   bot.connect(5, function() {
     Log.info('Connected to Twitch IRC servers.');
 
-    for (var i = 0; i < Config.channels.length; ++i) {
-      var channel = Config.channels[i];
+    for (var i = 0; i < channels.length; ++i) {
+      var channel = channels[i];
       Log.info(sprintf('Joining #%s.', channel));
 
       bot.join('#' + channel, function() {
