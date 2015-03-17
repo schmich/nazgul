@@ -5,6 +5,7 @@ var async = nazgul.async,
     Config = nazgul.Config,
     Log = nazgul.Log,
     sprintf = nazgul.sprintf,
+    sleep = nazgul.sleep,
     MongoClient = nazgul.MongoClient,
     Twitch = nazgul.Twitch;
 
@@ -56,18 +57,21 @@ var monitor = async(function(channels) {
   });
 
   Log.info('Connecting to Twitch IRC servers.');
-  bot.connect(5, function() {
+  bot.connect(5, async(function() {
     Log.info('Connected to Twitch IRC servers.');
 
     for (var i = 0; i < channels.length; ++i) {
-      var channel = channels[i];
-      Log.info(sprintf('Joining #%s.', channel));
+      (function(channel) {
+        Log.info(sprintf('Joining #%s.', channel));
 
-      bot.join('#' + channel, function() {
-        Log.info(sprintf('Joined #%s.', channel));
-      });
+        bot.join('#' + channel, function() {
+          Log.info(sprintf('Joined #%s.', channel));
+        });
+      })(channels[i]);
+
+      await(sleep(2000));
     }
-  });
+  }));
 
   bot.on('message#', async(function(from, channel, message) {
     from = from.toLowerCase();
@@ -112,4 +116,19 @@ var monitor = async(function(channels) {
   }));
 });
 
-monitor(Config.channels);
+if (process.argv.length < 4) {
+  Log.error('Usage: monitor-chat <group count> <group ID>');
+  process.exit(1);
+}
+
+var groupCount = process.argv[2];
+var groupId = process.argv[3];
+
+var channels = [];
+for (var i = 0; i < Config.channels.length; ++i) {
+  if ((i % groupCount) == groupId) {
+    channels.push(Config.channels[i]);
+  }
+}
+
+monitor(channels);
