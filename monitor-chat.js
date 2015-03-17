@@ -15,14 +15,22 @@ var monitor = async(function(channels) {
   var messages = db.collection('chat:messages');
   var joins = db.collection('chat:joins');
   var parts = db.collection('chat:parts');
+  var snapshots = db.collection('stream:snapshots');
 
   var twitchIds = {};
   for (var i = 0; i < channels.length; ++i) {
     var channel = channels[i].toLowerCase();
-    var url = sprintf('https://api.twitch.tv/kraken/users/%s', channel);
 
-    var response = await(Twitch.request(url));
-    var id = response._id;
+    var id = null;
+
+    var stream = await(snapshots.findOneAsync({ ch: channel }, { ui: 1 }));
+    if (stream && stream.ui) {
+      id = stream.ui;
+    } else {
+      var url = sprintf('https://api.twitch.tv/kraken/users/%s', channel);
+      var response = await(Twitch.request(url));
+      id = response._id;
+    }
 
     if (!id) {
       throw new Error(sprintf('Could not find Twitch channel ID for %s.', channel));
