@@ -53,7 +53,7 @@ var monitor = async(function(channels) {
   });
 
   bot.on('error', function(message) {
-    Log.error('IRC error: ' + message);
+    Log.error(sprintf('IRC error: %s', message));
   });
 
   Log.info('Connecting to Twitch IRC servers.');
@@ -64,7 +64,7 @@ var monitor = async(function(channels) {
       (function(channel) {
         Log.info(sprintf('Joining #%s.', channel));
 
-        bot.join('#' + channel, function() {
+        bot.join(sprintf('#%s', channel), function() {
           Log.info(sprintf('Joined #%s.', channel));
         });
       })(channels[i]);
