@@ -36,6 +36,7 @@ var takeSnapshot = async(function() {
         ui: stream.channel._id,
         ch: stream.channel.name,
         ga: stream.game,
+        sc: +(new Date(stream.created_at)),
         si: stream._id,
         vi: stream.viewers,
         la: stream.channel.language,

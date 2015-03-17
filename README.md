@@ -16,10 +16,11 @@
 ## Schema
 
 - `stream:snapshots`
- - `ts`: Timestamp of snapshot group
+ - `ts`: Snapshot group timestamp
  - `ui`: Channel owner's Twitch user ID
  - `ch`: Channel name
  - `ga`: Stream game name
+ - `sc`: Stream creation timestamp
  - `si`: Stream instance ID
  - `vi`: Stream viewer count
  - `la`: Channel language
@@ -42,7 +43,7 @@
  - `u`: Username of person parting
  - `t`: Part timestamp
 - `chat:viewers:snapshots`
- - `ts`: Timestamp of snapshot group
+ - `ts`: Snapshot group timestamp
  - `ch`: Channel name
  - `mo`: List of moderators in chat
  - `st`: List of staff in chat
