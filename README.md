@@ -53,5 +53,5 @@
 
 ## License
 
-Copyright &copy; 2015 Chris Schmich
-MIT License, See [LICENSE](LICENSE) for details.
+Copyright &copy; 2015 Chris Schmich<br>
+MIT License. See [LICENSE](LICENSE) for details.
