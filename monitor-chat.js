@@ -131,4 +131,4 @@ for (var i = 0; i < Config.channels.length; ++i) {
   }
 }
 
-monitor(channels);
+monitor(channels).done();

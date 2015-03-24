@@ -39,4 +39,4 @@ var takeSnapshot = async(function() {
   Log.info('Fin.');
 });
 
-takeSnapshot();
+takeSnapshot().done();
