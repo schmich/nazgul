@@ -13,7 +13,7 @@ var takeSnapshot = async(function() {
   var db = await(MongoClient.connectAsync(Config.mongo));
 
   var offset = 0;
-  var timestamp = +Date.now();
+  var timestamp = Date.now();
   var snapshots = db.collection('stream:snapshots');
 
   while (true) {

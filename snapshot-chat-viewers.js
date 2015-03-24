@@ -12,7 +12,7 @@ var takeSnapshot = async(function() {
   var db = await(MongoClient.connectAsync(Config.mongo));
   var viewers = db.collection('chat:viewers:snapshots');
 
-  var timestamp = +Date.now();
+  var timestamp = Date.now();
 
   var channels = Config.channels;
   for (var i = 0; i < channels.length; ++i) {
