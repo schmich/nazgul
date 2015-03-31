@@ -12,6 +12,7 @@
 - Live stream snapshots: collects stats on all live streams at periodic intervals
 - Chat viewer snapshots: collects viewers, mods, and admins in certain channels at periodic intervals
 - Chat monitoring: collects all messages, joins, and parts for certain channels
+- Host snapshots: collects hosts for certain channels
 
 ## Schema
 
@@ -50,6 +51,10 @@
  - `ad`: List of admins in chat
  - `gm`: List of global moderators in chat
  - `vi`: List of ordinary viewers in chat
+- `host:snapshots`
+ - `c`: Channel name
+ - `t`: Snapshot group timestamp
+ - `h`: List of channels hosting this channel
 
 ## License
 
