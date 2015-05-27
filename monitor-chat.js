@@ -117,7 +117,7 @@ var monitor = async(function(channels) {
 });
 
 if (process.argv.length < 4) {
-  Log.error('Usage: monitor-chat <group count> <group ID>');
+  Log.error('Usage: monitor-chat <group count> <0-based group ID>');
   process.exit(1);
 }
 
