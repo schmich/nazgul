@@ -6,24 +6,8 @@ var nazgul = require('./nazgul'),
     Log = nazgul.Log,
     sprintf = nazgul.sprintf,
     MongoClient = nazgul.MongoClient,
-    Twitch = nazgul.Twitch;
-
-var twitchId = async(function(user, snapshots) {
-  var stream = await(snapshots.findOneAsync({ ch: user }, { ui: 1 }));
-  if (stream && stream.ui) {
-    id = stream.ui;
-  } else {
-    var url = sprintf('https://api.twitch.tv/kraken/users/%s', user);
-    var response = await(Twitch.request(url));
-    id = response._id;
-  }
-
-  if (!id) {
-    throw new Error(sprintf('Could not find Twitch channel ID for %s.', channel));
-  }
-
-  return id;
-});
+    Twitch = nazgul.Twitch,
+    TwitchId = require('./twitch-id');
 
 var takeSnapshot = async(function() {
   Log.info('Host snapshot starting.');
@@ -34,14 +18,16 @@ var takeSnapshot = async(function() {
   var timestamp = Date.now();
 
   var channels = Config.channels;
+
+  var twitchId = await(new TwitchId(db, channels));
+
   for (var i = 0; i < channels.length; ++i) {
     var channel = channels[i];
-    var targetId = await(twitchId(channel, snapshots));
+    var targetId = twitchId.find(channel);
 
     var url = sprintf('http://tmi.twitch.tv/hosts?include_logins=1&target=%s', targetId);
 
     var response = await(Twitch.request(url, false));
-
     if (response && response.hosts) {
       var doc = {
         c: channel,

@@ -7,7 +7,8 @@ var async = nazgul.async,
     sprintf = nazgul.sprintf,
     sleep = nazgul.sleep,
     MongoClient = nazgul.MongoClient,
-    Twitch = nazgul.Twitch;
+    Twitch = nazgul.Twitch,
+    TwitchId = require('./twitch-id');
 
 var monitor = async(function(channels) {
   Log.info('Chat monitoring starting.');
@@ -18,27 +19,7 @@ var monitor = async(function(channels) {
   var parts = db.collection('chat:parts');
   var snapshots = db.collection('stream:snapshots');
 
-  var twitchIds = {};
-  for (var i = 0; i < channels.length; ++i) {
-    var channel = channels[i].toLowerCase();
-
-    var id = null;
-
-    var stream = await(snapshots.findOneAsync({ ch: channel }, { ui: 1 }));
-    if (stream && stream.ui) {
-      id = stream.ui;
-    } else {
-      var url = sprintf('https://api.twitch.tv/kraken/users/%s', channel);
-      var response = await(Twitch.request(url));
-      id = response._id;
-    }
-
-    if (!id) {
-      throw new Error(sprintf('Could not find Twitch channel ID for %s.', channel));
-    }
-
-    twitchIds[channel] = id;
-  }
+  var twitchId = await(new TwitchId(db, channels));
 
   var joinChannels = [];
   for (var i = 0; i < channels.length; ++i) {
@@ -78,7 +59,7 @@ var monitor = async(function(channels) {
 
     Log.info(sprintf('[%s] %s: %s', channel, from, message));
 
-    var doc = { i: twitchIds[channel], u: from, m: message, t: +Date.now() };
+    var doc = { i: twitchId.find(channel), u: from, m: message, t: +Date.now() };
     await(messages.insertAsync(doc));
   }));
 
@@ -92,7 +73,7 @@ var monitor = async(function(channels) {
 
     Log.info(sprintf('[%s] >>> %s', channel, nick));
 
-    var doc = { i: twitchIds[channel], u: nick, t: +Date.now() };
+    var doc = { i: twitchId.find(channel), u: nick, t: +Date.now() };
     await(joins.insertAsync(doc));
   }));
 
@@ -106,7 +87,7 @@ var monitor = async(function(channels) {
 
     Log.info(sprintf('[%s] <<< %s', channel, nick));
 
-    var doc = { i: twitchIds[channel], u: nick, t: +(new Date()) };
+    var doc = { i: twitchId.find(channel), u: nick, t: +(new Date()) };
     await(parts.insertAsync(doc));
   }));
 });
