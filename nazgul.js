@@ -45,6 +45,8 @@ Twitch.request = async(function(url, headers) {
     var body = response[0].body;
 
     var statusCode = response[0].statusCode;
+    Log.info(sprintf('Response status: %d.', statusCode));
+
     if (statusCode != 200) {
       Log.error(sprintf('Unexpected status code: %d\nResponse: %s', statusCode, body));
       if (tries == maxTries) {
