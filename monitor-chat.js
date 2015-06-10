@@ -40,13 +40,20 @@ var monitor = async(function(channels) {
     twitchIds[channel] = id;
   }
 
+  var joinChannels = [];
+  for (var i = 0; i < channels.length; ++i) {
+    joinChannels.push('#' + channels[i]);
+  }
+
   var bot = new irc.Client('irc.twitch.tv', Config.twitch.username, {
+    channels: joinChannels,
     port: 6667,
     showErrors: true,
     password: 'oauth:' + Config.twitch.oauth,
     userName: Config.twitch.username,
     realName: Config.twitch.username,
     autoConnect: false,
+    autoRejoin: true,
     showErrors: true,
     stripColors: true,
     secure: false
@@ -59,18 +66,6 @@ var monitor = async(function(channels) {
   Log.info('Connecting to Twitch IRC servers.');
   bot.connect(5, async(function() {
     Log.info('Connected to Twitch IRC servers.');
-
-    for (var i = 0; i < channels.length; ++i) {
-      (function(channel) {
-        Log.info(sprintf('Joining #%s.', channel));
-
-        bot.join(sprintf('#%s', channel), function() {
-          Log.info(sprintf('Joined #%s.', channel));
-        });
-      })(channels[i]);
-
-      await(sleep(2000));
-    }
   }));
 
   bot.on('message#', async(function(from, channel, message) {
