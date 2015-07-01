@@ -100,8 +100,17 @@ if (process.argv.length < 4) {
 var groupCount = process.argv[2];
 var groupId = process.argv[3];
 
+var channelsSeen = {};
 var channels = [];
 for (var i = 0; i < Config.channels.length; ++i) {
+  var channel = Config.channels[i];
+  if (channelsSeen[channel]) {
+    Log.error(sprintf('Duplicate channel: %s', channel));
+    process.exit(1);
+  }
+
+  channelsSeen[channel] = true;
+
   if ((i % groupCount) == groupId) {
     channels.push(Config.channels[i]);
   }
