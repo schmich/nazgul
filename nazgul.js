@@ -27,11 +27,14 @@ Twitch.request = async(function(url, headers) {
   var tries = 0;
   var maxTries = 5;
 
-  var options = { 'url': url };
+  var options = {
+    url: url,
+    timeout: 10 * 1000
+  };
 
   if (headers !== false) {
-    options['headers'] = {
-      'Accept': 'application/vnd.twitchtv.v3+json',
+    options.headers = {
+      Accept: 'application/vnd.twitchtv.v3+json',
       'Client-ID': 'nazgul (https://github.com/schmich/nazgul)'
     };
   }
@@ -41,14 +44,21 @@ Twitch.request = async(function(url, headers) {
 
     Log.info(sprintf('Requesting %s.', options.url));
 
-    var response = await(request.getAsync(options));
-    var body = response[0].body;
+    var success = false;
+    try {
+      var response = await(request.getAsync(options));
+      var body = response[0].body;
 
-    var statusCode = response[0].statusCode;
-    Log.info(sprintf('Response status: %d.', statusCode));
+      var statusCode = response[0].statusCode;
+      Log.info(sprintf('Response status: %d.', statusCode));
+      success = (statusCode == 200);
+    } catch (e) {
+      Log.error('Error during request.');
+      Log.error(e.toString());
+    }
 
-    if (statusCode != 200) {
-      Log.error(sprintf('Unexpected status code: %d\nResponse: %s', statusCode, body));
+    if (!success) {
+      Log.error('Request failed.');
       if (tries == maxTries) {
         throw new Error(sprintf('Max tries exceeded for %s.', options.url));
       }
