@@ -16,12 +16,18 @@ Log.add(Log.transports.Console, { timestamp: function() { return moment().format
 
 function sleep(duration) {
   return new Promise(function(resolve, reject) {
-    setTimeout(resolve, duration);
+    if (duration <= 0) {
+      resolve();
+    } else {
+      setTimeout(resolve, duration);
+    }
   });
 }
 
 function Twitch() {
 }
+
+Twitch.lastRequestTime = 0;
 
 Twitch.request = async(function(url, headers) {
   var tries = 0;
@@ -39,6 +45,9 @@ Twitch.request = async(function(url, headers) {
     };
   }
 
+  var delay = 1000 - ((Date.now() - this.lastRequestTime) / 1000);
+  await(sleep(delay));
+
   while (true) {
     ++tries;
 
@@ -47,6 +56,8 @@ Twitch.request = async(function(url, headers) {
     var success = false;
     try {
       var response = await(request.getAsync(options));
+      this.lastRequestTime = Date.now();
+
       var body = response[0].body;
 
       var statusCode = response[0].statusCode;
@@ -67,8 +78,6 @@ Twitch.request = async(function(url, headers) {
       await(sleep(5000));
       continue;
     }
-
-    await(sleep(1000));
     
     return JSON.parse(body);
   }
